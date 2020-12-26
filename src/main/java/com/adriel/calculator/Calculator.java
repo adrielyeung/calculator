@@ -1,54 +1,50 @@
-package com.fdmgroup.calculator;
+package com.adriel.calculator;
 
 import java.util.Arrays;
 
-/**
- * Stores a string array and a boolean array.
- * 
- * @author Adriel.Yeung
- *
- */
-class StringAndBoolReturn {
-	// Stores all values and operators to evaluate
-	private String[] str_arr;
-	// Stores whether it is a value (true) or an operator (false) in each position
-	private boolean[] bool_arr;
-
-	public StringAndBoolReturn(int len) {
-		super();
-		this.str_arr = new String[len];
-		this.bool_arr = new boolean[len];
-	}
-
-	public void setStr_arr(String str, int ind) {
-		this.str_arr[ind] = str;
-	}
-
-	public void setBool_arr(boolean bool, int ind) {
-		this.bool_arr[ind] = bool;
-	}
-
-	public String[] getStr_arr() {
-		return str_arr;
-	}
-
-	public boolean[] getBool_arr() {
-		return bool_arr;
-	}
-}
-
-class OperatorNotDefinedException extends RuntimeException {
-	public OperatorNotDefinedException(String msg) {
-		super(msg);
-	}
-}
+import com.adriel.calculator.exception.NonIntegerPowerException;
+import com.adriel.calculator.exception.OperatorNotDefinedException;
+import com.adriel.calculator.util.StringAndBoolReturn;
 
 /**
  * Calculates an output based on an input string.
  *
  */
-public class Calculator
-{	
+public class Calculator {
+	
+	/**
+	 * Evaluate mathematical expression <b>sum</b> in the form of a string (no space please), supporting the operators '+', '-', '*', '/', '^' and brackets.
+	 * @param sum
+	 * @return ans
+	 */
+	public double eval(String sum) {
+		StringAndBoolReturn sumSplit = splitNumeric(sum);
+		
+		System.out.println(sumSplit);
+		
+		// Add bracket operation here
+		
+		// Power has next highest priority
+		powerTwoNums(sumSplit);
+		
+		// Then multiply and divide
+		multiDivide(sumSplit);
+		
+		// Then add and subtract
+		addSubtract(sumSplit);
+		
+		// Check that all values has been operated
+		for (int i = 1; i < sumSplit.getStr_arr().length; i++) {
+			if (sumSplit.getStr_arr()[i] != null) {
+				throw new OperatorNotDefinedException("Operator " + sumSplit.getStr_arr()[i] + " is invalid.");
+			}
+		}
+		
+		// Final output (will be store in the first element)
+		double ans = Double.parseDouble(sumSplit.getStr_arr()[0]);
+		return ans;
+	}
+	
 	private StringAndBoolReturn store(StringAndBoolReturn toStore, String valOrOp, int ind, boolean isValue) {
 		toStore.setStr_arr(valOrOp, ind);
 		toStore.setBool_arr(isValue, ind);
@@ -62,28 +58,48 @@ public class Calculator
 	 */
 	private StringAndBoolReturn splitNumeric(String sum) {
 		// Stores the current value found
-		String num_store = "";
+		String numStore = "";
 		// Two arrays: one stores all values and operators to evaluate, the other stores whether it is a value (true) or an operator (false) in each position
 		StringAndBoolReturn out = new StringAndBoolReturn(sum.length());
 		// Position in array
 		int pos = 0;
+		// Boolean value to check whether previous char is an operator
+		// If previous char is operator, next can only be +/-/digit
+		boolean operatorAppeared = true;
+		// After each operator, this indicates whether the positive / negaive number indicator has appeared
+		boolean posNegAppeared = false;
+		// Check whether decimal point has appeared
+		boolean pointAppeared = false;
 		
 		for (int i = 0; i < sum.length(); i++) {
 			Character c = sum.charAt(i);
 			
-			if (Character.isDigit(c) || String.valueOf(c).equals(".")) {
+			if (Character.isDigit(c)) {
+				operatorAppeared = false;
+				posNegAppeared = false;
 				// Still a number, add to storage
-				num_store += c;
+				numStore += c;
+			} else if (String.valueOf(c).equals(".")) {
+				if (pointAppeared) {
+					throw new OperatorNotDefinedException("Multiple decimal points (" + String.valueOf(c) + ") found in number " + numStore + ".");
+				} else {
+					operatorAppeared = false;
+					posNegAppeared = false;
+					// Still a number, add to storage
+					numStore += c;
+					pointAppeared = true;
+				}
 			} else if (Character.isAlphabetic(c)) {
 				throw new OperatorNotDefinedException("Alphabet " + String.valueOf(c) + " cannot be used.");
 			} else {
-				if (i == 0) {
+				if (operatorAppeared) {
 					// Operator at first position, don't break
-					if (String.valueOf(c).equals("-") || String.valueOf(c).equals("+")) {
-						num_store += c;
+					if (!posNegAppeared && (String.valueOf(c).equals("-") || String.valueOf(c).equals("+"))) {
+						posNegAppeared = true;
+						numStore += c;
 						continue;
 					} else {
-						throw new OperatorNotDefinedException("Operator " + String.valueOf(c) + " cannot be used in first position.");
+						throw new OperatorNotDefinedException("Operator " + String.valueOf(c) + " cannot be used in first position, or after another operator.");
 					}
 				}
 				
@@ -91,21 +107,21 @@ public class Calculator
 					throw new OperatorNotDefinedException("Operator " + String.valueOf(c) + " cannot be used in last position.");
 				}
 				
-				// Broken apart by operator
-				if (num_store.equals("") == false) {
-					// Have a number, store number then operator
-					store(out, num_store, pos, true);
-					num_store = "";
-					pos++;
-				}
+				// Store number
+				store(out, numStore, pos, true);
+				numStore = "";
+				pos++;
 				// Store the operator
 				store(out, String.valueOf(c), pos, false);
 				pos++;
+				
+				operatorAppeared = true;
+				pointAppeared = false;
 			}
 			
 			// A number at the end
-			if (num_store.equals("") == false) {
-				store(out, num_store, pos, true);
+			if (!"".equals(numStore)) {
+				store(out, numStore, pos, true);
 			}
 		}
 		
@@ -122,11 +138,11 @@ public class Calculator
 		int ind_1 = ind_start;
 		int ind_2 = ind_start;
 		
-		while (tofind.getBool_arr()[ind_1] == false) {
+		while (!tofind.getBool_arr()[ind_1]) {
 			ind_1--;
 		}
 		
-		while (tofind.getBool_arr()[ind_2] == false) {
+		while (!tofind.getBool_arr()[ind_2]) {
 			ind_2++;
 		}
 		
@@ -162,6 +178,10 @@ public class Calculator
 			int ind_pow = Arrays.asList(toPower.getStr_arr()).indexOf("^");
 			// Test index - to move to index where previous number is found (1) and next (2)
 			int[] prevNextNums = findPrevNextNums(toPower, ind_pow);
+			
+			if (toPower.getStr_arr()[prevNextNums[1]].contains(".")) {
+				throw new NonIntegerPowerException("Raising to decimal power " + toPower.getStr_arr()[prevNextNums[1]] + " is not supported.");
+			}
 			
 			String powered = evalTwoNums(toPower.getStr_arr()[prevNextNums[0]], toPower.getStr_arr()[prevNextNums[1]], "^");
 			
@@ -277,45 +297,9 @@ public class Calculator
 				result *= aa;
 			}
 			break;
-		
-		default:
-			throw new OperatorNotDefinedException("Operator " + op + " is not defined.");
 		}
 		
 		return Double.toString(result);
 	}
 	
-	/**
-	 * Evaluate mathematical expression <b>sum</b> in the form of a string (no space please), supporting the operators '+', '-', '*', '/', '^' and brackets.
-	 * @param sum
-	 * @return ans
-	 */
-	public double eval(String sum) {
-		StringAndBoolReturn sum_split = splitNumeric(sum);
-		
-		// Add bracket operation here
-		
-		// Power has next highest priority
-		powerTwoNums(sum_split);
-		
-		// Then multiply and divide
-		multiDivide(sum_split);
-		
-		// Then add and subtract
-		addSubtract(sum_split);
-		
-		// Final output (will be store in the first element)
-		double ans = Double.parseDouble(sum_split.getStr_arr()[0]);
-		return ans;
-	}
-	
-    public static void main( String[] args )
-    {
-        Calculator cal = new Calculator();
-    	
-    	// Insert test cases here
-    	String inp = "-15+67*4^3-2.3^5";
-        
-        System.out.println(cal.eval(inp));
-    }
 }

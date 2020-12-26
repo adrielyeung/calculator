@@ -6,6 +6,7 @@ import org.junit.Before;
 
 import java.lang.Math;
 
+import com.adriel.calculator.exception.NonIntegerPowerException;
 import com.adriel.calculator.exception.OperatorNotDefinedException;
 
 import junit.framework.TestCase;
@@ -109,11 +110,10 @@ public class CalculatorTest extends TestCase {
     }
     
 //  TODO To be deleted after decimal power feature is supported
-    @org.junit.Test(expected = OperatorNotDefinedException.class)
+    @org.junit.Test(expected = NonIntegerPowerException.class)
     public void testInvalidDecimalPowerInput() {
     	String expression = "0.5^1.5";
-    	System.out.println("Expression is: " + testCalculator.eval(expression));
-    	assertThrows(OperatorNotDefinedException.class, () -> testCalculator.eval(expression));
+    	assertThrows(NonIntegerPowerException.class, () -> testCalculator.eval(expression));
     }
     
     @org.junit.Test

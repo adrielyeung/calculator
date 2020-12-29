@@ -28,6 +28,14 @@ public class StringAndBoolReturn {
 			this.bool_arr[ind] = bool;
 		}
 
+		public void setStr_arr(String[] str_arr) {
+			this.str_arr = str_arr;
+		}
+
+		public void setBool_arr(boolean[] bool_arr) {
+			this.bool_arr = bool_arr;
+		}
+
 		public String[] getStr_arr() {
 			return str_arr;
 		}
@@ -40,5 +48,10 @@ public class StringAndBoolReturn {
 		public String toString() {
 			return "StringAndBoolReturn [str_arr=" + Arrays.toString(str_arr) + ", bool_arr="
 					+ Arrays.toString(bool_arr) + "]";
+		}
+		
+		public void store(String valOrOp, boolean isValue, int ind) {
+			this.setStr_arr(valOrOp, ind);
+			this.setBool_arr(isValue, ind);
 		}
 }

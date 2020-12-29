@@ -8,13 +8,10 @@ public class Application {
 	public static void main(String[] args) {
         Calculator cal = CalculatorFactory.getCalculator();
     	
-        double a = 0*-1;
-        System.out.println(a);
-        
     	// Insert test cases here
-//    	String inp = "0.5*-+1.5";
+    	String inp = "(1.5*[2+3])/4.5";
         
-//        System.out.println(cal.eval(inp));
+        System.out.println(cal.eval(inp));
     }
 
 }

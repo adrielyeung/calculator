@@ -5,6 +5,10 @@ Currently support 3-level bracket too.
 
 Code written in Java.
 
+What's new - 12/1/2020
+----------------------
+Added GUI for input of expression and and return of answer / error message.
+
 What's new - 29/12/2020
 -----------------------
 Round brackets (parentheses) (), square brackets \[\], and curly braces {} are supported as 3 levels of brackets. (Please see note below on how to use.)
@@ -23,3 +27,4 @@ Features in development
 -----------------------
 1. Support decimal number as power.
 2. User interface / web app for inputting expression in ```main``` method in ```Application.java```.
+3. Add interactive mode in GUI to allow for instant calculation while inputting, instead of using "Calculate" button.

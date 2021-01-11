@@ -191,6 +191,18 @@ public class CalculatorTest extends TestCase {
     	assertThrows(OperatorNotDefinedException.class, () -> testCalculator.eval(expression));
     }
     
+    @org.junit.Test(expected = OperatorNotDefinedException.class)
+    public void testCurlyBracketWithRoundParenthesisInput() {
+    	String expression = "(1.5*{2+3})/4.5";
+    	assertThrows(OperatorNotDefinedException.class, () -> testCalculator.eval(expression));
+    }
+    
+    @org.junit.Test(expected = OperatorNotDefinedException.class)
+    public void testCurlyBracketWithSquareBracketInput() {
+    	String expression = "[1.5*{2+3}]/4.5";
+    	assertThrows(OperatorNotDefinedException.class, () -> testCalculator.eval(expression));
+    }
+    
     // Test simple operations (no bracket)
     @org.junit.Test
     public void testSimpleSum() {
@@ -563,4 +575,5 @@ public class CalculatorTest extends TestCase {
     	double actual = testCalculator.eval(expression);
         assertEquals(expected, actual);
     }
+    
 }

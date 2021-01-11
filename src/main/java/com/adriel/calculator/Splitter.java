@@ -11,6 +11,8 @@ public class Splitter {
 	private final String MULTI_DECIMAL_MSG = "Multiple decimal points (%s) found in number %s.";
 	private final String NO_OPEN_BRACKET_MSG = "Cannot find appropriate opening bracket ( for %s";
 	
+	protected Splitter() {}
+	
 	/**
 	 * Splits the string expression <b>sum</b> by operators (non-numeric characters), and stores these into an array <b>eval_arr</b>. Another array <b>num_op_arr</b> is used to store whether the string at each position is a numeric (true).
 	 * @param sum
@@ -74,7 +76,7 @@ public class Splitter {
 				splittedExpression.store(String.valueOf(c), false, pos);
 				pos++;
 			} else if (String.valueOf(c).equals("[")) {
-				if (squareBracketAppeared) {
+				if (squareBracketAppeared || roundParenthesisAppeared) {
 					throw new OperatorNotDefinedException(String.format(OPERATOR_NOT_DEFINED_MSG, String.valueOf(c)));
 				}
 				squareBracketAppeared = true;
@@ -94,7 +96,7 @@ public class Splitter {
 				splittedExpression.store(String.valueOf(c), false, pos);
 				pos++;
 			} else if (String.valueOf(c).equals("{")) {
-				if (curlyBraceAppeared) {
+				if (curlyBraceAppeared || squareBracketAppeared || roundParenthesisAppeared) {
 					throw new OperatorNotDefinedException(String.format(OPERATOR_NOT_DEFINED_MSG, String.valueOf(c)));
 				}
 				curlyBraceAppeared = true;

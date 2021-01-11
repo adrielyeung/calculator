@@ -19,7 +19,7 @@ public class Calculator {
 	private Splitter splitter;
 	private StringAndBoolReturn sumSplit;
 	
-	public Calculator() {
+	protected Calculator() {
 		splitter = SplitterFactory.getSplitter();
 	}
 	
@@ -63,16 +63,16 @@ public class Calculator {
 				sumWithinBracket.setBool_arr(operatorWithinBracket);
 				double ansWithinBracket = evalInOrder(sumWithinBracket);
 				
-				// Update arrays of sumSplit with above result (length of bracket expression is close - open + 1)
-				String[] expressionOutsideBracket = new String[sumSplit.getStr_arr().length-closeIndex+openIndex-1];
-				boolean[] operatorOutsideBracket = new boolean[sumSplit.getStr_arr().length-closeIndex+openIndex-1];
+				// Update arrays of sumSplit with above result (length of bracket expression is close - open + 1, now replaced by 1 spot)
+				String[] expressionOutsideBracket = new String[sumSplit.getStr_arr().length-closeIndex+openIndex];
+				boolean[] operatorOutsideBracket = new boolean[sumSplit.getStr_arr().length-closeIndex+openIndex];
 				
 				System.arraycopy(sumSplit.getStr_arr(), 0, expressionOutsideBracket, 0, openIndex);
 				System.arraycopy(sumSplit.getBool_arr(), 0, operatorOutsideBracket, 0, openIndex);
 				expressionOutsideBracket[openIndex] = String.valueOf(ansWithinBracket);
 				operatorOutsideBracket[openIndex] = true;
-				System.arraycopy(sumSplit.getStr_arr(), closeIndex+1, expressionOutsideBracket, openIndex+1, sumSplit.getStr_arr().length-closeIndex-2);
-				System.arraycopy(sumSplit.getBool_arr(), closeIndex+1, operatorOutsideBracket, openIndex+1, sumSplit.getBool_arr().length-closeIndex-2);
+				System.arraycopy(sumSplit.getStr_arr(), closeIndex+1, expressionOutsideBracket, openIndex+1, sumSplit.getStr_arr().length-closeIndex-1);
+				System.arraycopy(sumSplit.getBool_arr(), closeIndex+1, operatorOutsideBracket, openIndex+1, sumSplit.getBool_arr().length-closeIndex-1);
 				sumSplit.setStr_arr(expressionOutsideBracket);
 				sumSplit.setBool_arr(operatorOutsideBracket);
 		    }

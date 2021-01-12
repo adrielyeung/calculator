@@ -1,4 +1,4 @@
-package com.adriel.calculator.app;
+package com.adriel.calculator.listener;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -10,6 +10,8 @@ import javax.swing.JTextField;
 import com.adriel.calculator.Calculator;
 
 public class CalculatorListener implements ActionListener {
+	
+	private final static String NO_INPUT_MSG = "Please enter an expression.";
 	
 	private JTextField textField;
 	private JLabel msgLabel;
@@ -26,6 +28,10 @@ public class CalculatorListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		expression = textField.getText();
+		if (expression == null || expression.isEmpty()) {
+			msgLabel.setForeground(Color.RED);
+			msgLabel.setText(NO_INPUT_MSG);
+		}
 		try {
 			answer = calculator.eval(expression);
 			msgLabel.setForeground(Color.BLACK);

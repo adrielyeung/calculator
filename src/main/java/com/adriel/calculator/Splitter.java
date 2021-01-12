@@ -9,7 +9,7 @@ public class Splitter {
 	private final String ALPHABET_OPERATOR_MSG = "Alphabet %s cannot be used.";
 	private final String OPERATOR_IN_LAST_MSG = "Operator %s cannot be used in last position.";
 	private final String MULTI_DECIMAL_MSG = "Multiple decimal points (%s) found in number %s.";
-	private final String NO_OPEN_BRACKET_MSG = "Cannot find appropriate opening bracket ( for %s";
+	private final String NO_OPEN_BRACKET_MSG = "Cannot find appropriate opening bracket %s for %s";
 	
 	protected Splitter() {}
 	
@@ -66,7 +66,7 @@ public class Splitter {
 				pos++;
 			} else if (String.valueOf(c).equals(")")) {
 				if (!roundParenthesisAppeared) {
-					throw new OperatorNotDefinedException(String.format(NO_OPEN_BRACKET_MSG, String.valueOf(c)));
+					throw new OperatorNotDefinedException(String.format(NO_OPEN_BRACKET_MSG, "(", String.valueOf(c)));
 				}
 				roundParenthesisAppeared = false;
 				// Store number (there must be a number before closing bracket, for any valid expression)
@@ -84,7 +84,7 @@ public class Splitter {
 				pos++;
 			} else if (String.valueOf(c).equals("]")) {
 				if (!squareBracketAppeared) {
-					throw new OperatorNotDefinedException(String.format(NO_OPEN_BRACKET_MSG, String.valueOf(c)));
+					throw new OperatorNotDefinedException(String.format(NO_OPEN_BRACKET_MSG, "[", String.valueOf(c)));
 				}
 				squareBracketAppeared = false;
 				// Store number if found
@@ -104,7 +104,7 @@ public class Splitter {
 				pos++;
 			} else if (String.valueOf(c).equals("}")) {
 				if (!curlyBraceAppeared) {
-					throw new OperatorNotDefinedException(String.format(NO_OPEN_BRACKET_MSG, String.valueOf(c)));
+					throw new OperatorNotDefinedException(String.format(NO_OPEN_BRACKET_MSG, "{", String.valueOf(c)));
 				}
 				curlyBraceAppeared = false;
 				// Store number if found

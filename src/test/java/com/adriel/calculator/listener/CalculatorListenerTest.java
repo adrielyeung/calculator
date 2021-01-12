@@ -1,4 +1,4 @@
-package com.adriel.calculator.app;
+package com.adriel.calculator.listener;
 
 import java.awt.event.ActionEvent;
 
@@ -33,6 +33,7 @@ public class CalculatorListenerTest extends TestCase {
 	private final static String ERROR = "error";
 	private final static double ANSWER = 2.0;
 	private final static String MESSAGE = "Message";
+	private final static String NO_INPUT_MSG = "Please enter an expression.";
 	
 	@Before
 	public void setUp() {
@@ -45,7 +46,7 @@ public class CalculatorListenerTest extends TestCase {
 		try {
     		new CalculatorListener(mockTextField, mockLabel, mockCalculator);
     	} catch (Exception e) {
-    		Assert.fail("Exception in creation of CalculatorFactory" + e.getMessage());
+    		Assert.fail("Exception in creation of CalculatorListener" + e.getMessage());
     	}
 	}
 	
@@ -57,6 +58,24 @@ public class CalculatorListenerTest extends TestCase {
 		testCalculatorListener.actionPerformed(mockEvent);
 		
 		Mockito.verify(mockLabel).setText(String.valueOf(ANSWER));
+	}
+	
+	@Test
+	public void testActionPerformedWithEmptyInput() {
+		when(mockTextField.getText()).thenReturn("");
+		
+		testCalculatorListener.actionPerformed(mockEvent);
+		
+		Mockito.verify(mockLabel).setText(String.valueOf(NO_INPUT_MSG));
+	}
+	
+	@Test
+	public void testActionPerformedWithNullInput() {
+		when(mockTextField.getText()).thenReturn(null);
+		
+		testCalculatorListener.actionPerformed(mockEvent);
+		
+		Mockito.verify(mockLabel).setText(String.valueOf(NO_INPUT_MSG));
 	}
 	
 	@Test

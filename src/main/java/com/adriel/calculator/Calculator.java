@@ -12,9 +12,9 @@ import com.adriel.calculator.util.StringAndBoolReturn;
  */
 public class Calculator {
 	
-	private final String OPERATOR_INVALID_MSG = "Operator %s is invalid.";
-	private final String NO_CLOSE_BRACKET_MSG = "Cannot find appropriate closing bracket %s for %s";
-	private final String DECIMAL_POWER_MSG = "Raising to decimal power %s is not supported.";
+	private final static String OPERATOR_INVALID_MSG = "Operator %s is invalid.";
+	private final static String NO_CLOSE_BRACKET_MSG = "Cannot find appropriate closing bracket %s for %s";
+	private final static String DECIMAL_POWER_MSG = "Raising to decimal power %s is not supported.";
 	
 	private Splitter splitter;
 	private StringAndBoolReturn sumSplit;

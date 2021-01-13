@@ -17,9 +17,13 @@ public class DeleteListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String currentString = textField.getText();
-		if (currentString != null && !currentString.isEmpty()) {
-			textField.setText(currentString.substring(0, currentString.length()-1));
+		String currentText = textField.getText();
+		int caretPosition = textField.getCaretPosition();
+		if (currentText != null && !currentText.isEmpty()) {
+			String currentTextFirst = currentText.substring(0, textField.getCaretPosition()-1);
+			String currentTextLast = currentText.substring(textField.getCaretPosition());
+			textField.setText(currentTextFirst + currentTextLast);
+			textField.setCaretPosition(caretPosition-1);
 		}
 		msgLabel.setText("");
 	}

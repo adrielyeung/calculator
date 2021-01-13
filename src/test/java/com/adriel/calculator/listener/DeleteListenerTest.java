@@ -49,6 +49,7 @@ public class DeleteListenerTest extends TestCase {
 	@Test
 	public void testActionPerformed() {
 		when(mockTextField.getText()).thenReturn(TEST);
+		when(mockTextField.getCaretPosition()).thenReturn(TEST.length());
 		testDeleteListener.actionPerformed(mockEvent);
 		
 		Mockito.verify(mockTextField).setText("tes");

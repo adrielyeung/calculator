@@ -47,6 +47,7 @@ public class NumberListenerTest extends TestCase {
 	@Test
 	public void testActionPerformed() {
 		when(mockTextField.getText()).thenReturn("0");
+		when(mockTextField.getCaretPosition()).thenReturn(1);
 		when(mockEvent.getActionCommand()).thenReturn("1");
 		
 		testNumberListener.actionPerformed(mockEvent);

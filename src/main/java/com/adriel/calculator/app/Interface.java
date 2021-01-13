@@ -1,8 +1,8 @@
 package com.adriel.calculator.app;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionListener;
 
@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import com.adriel.calculator.CalculatorFactory;
 import com.adriel.calculator.listener.CalculatorListener;
 import com.adriel.calculator.listener.ClearListener;
+import com.adriel.calculator.listener.CopyListener;
 import com.adriel.calculator.listener.DeleteListener;
 import com.adriel.calculator.listener.NumberListener;
 
@@ -25,12 +26,11 @@ public class Interface {
 	private JPanel panel;
 	private JLabel label;
 	private JTextField textField;
-	private JButton calculateButton;
 	private JPanel numberPanelTop;
 	private JPanel numberPanelMiddle;
 	private JPanel numberPanelBottom;
+	private JPanel calculatePanel;
 	private JLabel msgLabel;
-	private CalculatorListener calculatorListener;
 	
 	protected Interface() {
 		frame = new JFrame("Calculator");
@@ -41,10 +41,8 @@ public class Interface {
 
 		label = new JLabel("Please enter expression to calculate and then press 'Calculate' button below.");
 		msgLabel = new JLabel();
+		msgLabel.setFont(new Font(msgLabel.getFont().getName(), Font.PLAIN, 40));
 		textField = new JTextField(750);
-		calculateButton = new JButton("Calculate");
-		calculatorListener = new CalculatorListener(textField, msgLabel, CalculatorFactory.getCalculator());
-		calculateButton.addActionListener(calculatorListener);
 		
 		numberPanelTop = new JPanel();
 		numberPanelTop.setLayout(new GridLayout(0, 4));
@@ -79,16 +77,21 @@ public class Interface {
 		numberPanelBottom.add(generateNumberButton("-"));
 		
 		numberPanelBottom.add(generateNumberButton("0"));
-		numberPanelBottom.add(generateNumberButton("00"));
 		numberPanelBottom.add(generateNumberButton("."));
+		numberPanelBottom.add(generateNumberButton("^"));
 		numberPanelBottom.add(generateNumberButton("+"));
+		
+		calculatePanel = new JPanel();
+		calculatePanel.setLayout(new GridLayout(0, 2));
+		calculatePanel.add(generateCalculateButton("Calculate"));
+		calculatePanel.add(generateCopyButton("Copy to input"));
 		
 		panel.add(label);
 		panel.add(textField);
 		panel.add(numberPanelTop);
 		panel.add(numberPanelMiddle);
 		panel.add(numberPanelBottom);
-		panel.add(calculateButton);
+		panel.add(calculatePanel);
 		panel.add(msgLabel);
 		
 		frame.add(panel, BorderLayout.CENTER);
@@ -115,4 +118,11 @@ public class Interface {
 		return generateButton(value, new NumberListener(textField));
 	}
 	
+	private JButton generateCalculateButton(String value) {
+		return generateButton(value, new CalculatorListener(textField, msgLabel, CalculatorFactory.getCalculator()));
+	}
+	
+	private JButton generateCopyButton(String value) {
+		return generateButton(value, new CopyListener(textField, msgLabel));
+	}
 }

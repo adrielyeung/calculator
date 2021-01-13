@@ -16,7 +16,11 @@ public class NumberListener implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String currentText = textField.getText();
-		textField.setText(currentText + e.getActionCommand());
+		int caretPosition = textField.getCaretPosition();
+		String currentTextFirst = currentText.substring(0, caretPosition);
+		String currentTextLast = currentText.substring(caretPosition);
+		textField.setText(currentTextFirst + e.getActionCommand() + currentTextLast);
+		textField.setCaretPosition(caretPosition+1);
 	}
 
 }
